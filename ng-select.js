@@ -1,4 +1,4 @@
-import { Component, ContentChild, ElementRef, EventEmitter, HostListener, Input, NgModule, Output, ViewChild, ViewEncapsulation, forwardRef } from '@angular/core';
+import { ChangeDetectorRef, Component, ContentChild, ElementRef, EventEmitter, HostListener, Input, NgModule, Output, ViewChild, ViewEncapsulation, forwardRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
 
@@ -1188,9 +1188,11 @@ const SELECT_VALUE_ACCESSOR = {
 class SelectComponent {
     /**
      * @param {?} hostElement
+     * @param {?} changeDetectorRef
      */
-    constructor(hostElement) {
+    constructor(hostElement, changeDetectorRef) {
         this.hostElement = hostElement;
+        this.changeDetectorRef = changeDetectorRef;
         // Data input.
         this.options = [];
         // Functionality settings.
@@ -1520,6 +1522,7 @@ class SelectComponent {
         this.placeholderView = this.optionList.hasSelected ? '' : this.placeholder;
         setTimeout(() => {
             this.updateFilterWidth();
+            this.changeDetectorRef.markForCheck();
         });
     }
     /**
@@ -1875,7 +1878,10 @@ SelectComponent.decorators = [
                   (keydown)="onMultipleFilterKeydown($event)"
                   (focus)="onMultipleFilterFocus()"/>
           </div>
-
+          <div class="clearMultiple" *ngIf="multiple && allowClear && optionList?.selection.length > 0" (click)="onClearSelectionClick()">
+              <ng-template [ngTemplateOutlet]="clearMultipleTemplate"></ng-template>
+              <div class="clearMultipleButton" *ngIf="!clearMultipleTemplate">&#x2715;</div>
+          </div>
       </div>
       <select-dropdown
           *ngIf="isOpen"
@@ -1918,7 +1924,17 @@ SelectComponent.decorators = [
              -moz-user-select: none;
               -ms-user-select: none;
                   user-select: none;
-          width: 100%; }
+          width: 100%;
+          display: -webkit-box;
+          display: -ms-flexbox;
+          display: flex;
+          -webkit-box-orient: horizontal;
+          -webkit-box-direction: normal;
+              -ms-flex-direction: row;
+                  flex-direction: row;
+          -webkit-box-align: center;
+              -ms-flex-align: center;
+                  align-items: center; }
           ng-select > div.disabled {
             background-color: #eee;
             color: #aaa;
@@ -2001,6 +2017,8 @@ SelectComponent.decorators = [
           display: block;
           font-size: 13px;
           padding: 4px 0; }
+        ng-select .clearMultipleButton {
+          padding: 12px; }
     `],
                 providers: [SELECT_VALUE_ACCESSOR],
                 encapsulation: ViewEncapsulation.None
@@ -2011,6 +2029,7 @@ SelectComponent.decorators = [
  */
 SelectComponent.ctorParameters = () => [
     { type: ElementRef, },
+    { type: ChangeDetectorRef, },
 ];
 SelectComponent.propDecorators = {
     'options': [{ type: Input },],
@@ -2038,6 +2057,7 @@ SelectComponent.propDecorators = {
     'filterInput': [{ type: ViewChild, args: ['filterInput',] },],
     'optionTemplate': [{ type: ContentChild, args: ['optionTemplate',] },],
     'selectionTemplate': [{ type: ContentChild, args: ['selectionTemplate',] },],
+    'clearMultipleTemplate': [{ type: ContentChild, args: ['clearMultipleTemplate',] },],
     'onWindowBlur': [{ type: HostListener, args: ['window:blur',] },],
     'onWindowClick': [{ type: HostListener, args: ['window:click',] },],
     'onWindowResize': [{ type: HostListener, args: ['window:resize',] },],

@@ -1,4 +1,4 @@
-import { OnChanges, OnInit, EventEmitter, ExistingProvider, ElementRef, SimpleChanges, TemplateRef } from '@angular/core';
+import { OnChanges, OnInit, EventEmitter, ExistingProvider, ElementRef, SimpleChanges, TemplateRef, ChangeDetectorRef } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
 import { SelectDropdownComponent } from './select-dropdown.component';
 import { IOption } from './option.interface';
@@ -6,6 +6,7 @@ import { Option } from './option';
 export declare const SELECT_VALUE_ACCESSOR: ExistingProvider;
 export declare class SelectComponent implements ControlValueAccessor, OnChanges, OnInit {
     private hostElement;
+    private changeDetectorRef;
     options: Array<IOption>;
     allowClear: boolean;
     disabled: boolean;
@@ -31,6 +32,7 @@ export declare class SelectComponent implements ControlValueAccessor, OnChanges,
     filterInput: ElementRef;
     optionTemplate: TemplateRef<any>;
     selectionTemplate: TemplateRef<any>;
+    clearMultipleTemplate: TemplateRef<any>;
     private _value;
     private optionList;
     hasFocus: boolean;
@@ -50,7 +52,7 @@ export declare class SelectComponent implements ControlValueAccessor, OnChanges,
     private left;
     private onChange;
     private onTouched;
-    constructor(hostElement: ElementRef);
+    constructor(hostElement: ElementRef, changeDetectorRef: ChangeDetectorRef);
     /** Event handlers. **/
     ngOnInit(): void;
     ngOnChanges(changes: SimpleChanges): void;
