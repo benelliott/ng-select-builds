@@ -3,6 +3,7 @@ import { ControlValueAccessor } from '@angular/forms';
 import { SelectDropdownComponent } from './select-dropdown.component';
 import { IOption } from './option.interface';
 import { Option } from './option';
+import { OptionList } from './option-list';
 export declare const SELECT_VALUE_ACCESSOR: ExistingProvider;
 export declare class SelectComponent implements ControlValueAccessor, OnChanges, OnInit {
     private hostElement;
@@ -34,7 +35,7 @@ export declare class SelectComponent implements ControlValueAccessor, OnChanges,
     selectionTemplate: TemplateRef<any>;
     clearMultipleTemplate: TemplateRef<any>;
     private _value;
-    private optionList;
+    optionList: OptionList;
     hasFocus: boolean;
     isOpen: boolean;
     isBelow: boolean;
